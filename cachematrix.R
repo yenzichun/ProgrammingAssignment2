@@ -3,44 +3,63 @@
 
 ## makeCacheMatrix(): to create a list object that stores a numeric vector.
 
-## cacheSolve(): to solve the inverted matrix that *** and cache's its inverted matrix.
+## cacheSolve(): to solve the inverted matrix and cache's its inverted matrix.
 
 
 ## Write a short comment describing this function
 
+## This function will create/return a list object that stores a numeric vector (i.e the "cache")
+## The cache is defined by 4 element:
+## 1.set_o_m: sets the original matrix using the anonymous function set_ori_mtx().
+## 2.set_i_m: sets the inverted matrix using the anonymous function set_inv_mtx().
+## 3.get_o_m: returns the original matrix using the anonymous function get_ori_mtx().
+## 4.get_i_m: returns the inverted matrix using the anonymous function get_inv_mtx().
+## At the end of this function, it returns the list object.
+
+
 makeCacheMatrix <- function(x = matrix()) {
-        ans <- NULL
-        set <- function(y) {
-            x <<- y 
-            ans <<- NULL
-        }
-        set_ans <- function(x) {
-            ans <<- x
-        }
-        get_ori_matrix <- function() {
-            x
-        }
-        get_ans <- function() {
-            ans
-        }
-        list(set = set, 
-             get = get_ori_matrix,
-             set_ans = set_ans,
-             get_ans = get_ans)
+    inv_mtx <- NULL ## initialize the inv_mtx variable to NULL
+    set_ori_mtx <- function(y) {
+        x <<- y 
+        ## use <<- operator so that variable x can be accessed by cacheSolve(), 
+        ## whose environment is different from the current environment.
+        inv_mtx <<- NULL
+    }
+    set_inv_mtx <- function(x) {
+        inv_mtx <<- x 
+        ## use <<- operator so that variable inv_mtx can be accessed by cacheSolve(), 
+        ## whose environment is different from the current environment.
+    }
+    get_ori_mtx <- function() {
+        x
+    }
+    get_inv_mtx <- function() {
+        inv_mtx
+    }
+    list(set_o_m = set_ori_mtx, 
+         set_i_m = set_inv_mtx,
+         get_o_m = get_ori_mtx,
+         get_i_m = get_inv_mtx)
 }
 
 
 ## Write a short comment describing this function
 
+## This function will try to access inverted matrix(i.e get_i_m) from the numeric vector in makeCacheMatrix(),
+## If the inverted matrix does exist in cache, then return the inverted matrix(i.e inv_mtx)
+## If it's null, then access the original matrix (i.e get_o_m) from cache, solve the inverted matrix,
+## and set it back to cache.
+## At last, return the inverted matrix (i.e inv_mtx) which is cached in makeCacheMatrix().
+
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
-        inverted_m <- x$get_ans()
-        if(!is.null(inverted_m)) {
-            message("getting cached data")
-            return(inverted_m)
-        }
-        data <- x$get()
-        inverted_m <- solve(data, ...)
-        x$set_ans(inverted_m)
-        inverted_m
+    ## Return a matrix that is the inverse of 'x'
+    inv_mtx <- x$get_i_m()
+    if(!is.null(inv_mtx)) {
+        message("getting cached data")
+        return(inv_mtx)
+    }
+    data <- x$get_o_m()
+    inv_mtx <- solve(data, ...)
+    x$set_i_m(inv_mtx)
+    inv_mtx
 }
