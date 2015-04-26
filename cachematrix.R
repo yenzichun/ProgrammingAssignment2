@@ -25,7 +25,7 @@ makeCacheMatrix <- function(x = matrix()) {
     set_inv_mtx <- function(x) {
         inv_mtx <<- x ## use <<- operator so that variable inv_mtx can be accessed by cacheSolve().
     }
-    get_ori_mtx <- function() x
+    get_ori_mtx <- function() x ## this function simply returns x. So short that doesn't need braces.
     get_inv_mtx <- function() inv_mtx
     list(set_o_m = set_ori_mtx, 
          set_i_m = set_inv_mtx,
